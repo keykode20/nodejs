@@ -4,8 +4,8 @@ const emitter = new EventEmitter();
 
 //Register a listerner
 //order is important in this case
-emitter.on('messageLogged',function(){
-   console.log('Listener called'); 
+emitter.on('messageLogged',(arg) =>{
+   console.log('Listener called',arg); 
 });
 
-emitter.emit('messageLogged');
+emitter.emit('messageLogged', {id:1, url:"http://"});
