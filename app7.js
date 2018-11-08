@@ -1,8 +1,11 @@
 const express = require('express');
-var app = express();
-var path = require('path');
+const app = express();
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'static')));
 
 app.get("/",(req,res)=>{
-    res.sendFile(__dirname+'/index.html');
+    res.sendFile(__dirname+'/static/index.html');
 });
+
 app.listen(80);
