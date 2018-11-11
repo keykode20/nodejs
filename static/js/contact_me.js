@@ -1,6 +1,18 @@
 $(function() {
 
-  $("#contactForm input,#contactForm textarea").jqBootstrapValidation({
+  $("#sendMessageButton").on('click',function(){
+      $.ajax({
+          url:'/test',
+          type: "POST",
+          data: {
+            message: $('#message').val(),
+          },
+          success: function(){
+          }
+        })
+  });
+
+/*  $("#contactForm input,#contactForm textarea").jqBootstrapValidation({
     preventSubmit: true,
     submitError: function($form, event, errors) {
       // additional error messages or events
@@ -20,7 +32,7 @@ $(function() {
       $this = $("#sendMessageButton");
       $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
       $.ajax({
-        url: "././mail/contact_me.php",
+        url: "/test",
         type: "POST",
         data: {
           name: name,
@@ -61,7 +73,7 @@ $(function() {
     filter: function() {
       return $(this).is(":visible");
     },
-  });
+  }); */
 
   $("a[data-toggle=\"tab\"]").click(function(e) {
     e.preventDefault();
