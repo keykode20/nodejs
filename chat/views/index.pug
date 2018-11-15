@@ -18,7 +18,7 @@ section#contact
             #success
             .form-group
               button#sendMessageButton.btn.btn-primary.btn-xl(type='button') Send
-    #here #{message}
+    #here  #{message}
 //    h1= message
 script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
 script(type='text/javascript').
@@ -34,7 +34,8 @@ script(type='text/javascript').
     success: function(asd){
     console.log('on success');
     console.log(asd);
-    $("#here").load(location.href + " #here");
+    $("#here").html(JSON.stringify(asd));
+    //$("#here").load(location.href + " #here");
     }
     })
   }else{

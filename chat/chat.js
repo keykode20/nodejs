@@ -34,65 +34,39 @@ app.set('view engine', 'pug');
 var listOnMesg = new Array();
 
 app.get("/",(req,res)=>{
-  console.log(listOnMesg.toString());
   //res.render(__dirname+'/static/index.html',{message:listOnMesg.toString()});
-  res.render('index',{message:listOnMesg.toString()});
+  //,{message:listOnMesg.toString()}
+  res.render('index');
 });
 
 app.get("/f",(req,res)=>{
-  //console.log('before saving: '+listOnMesg.toString());
   //if(listOnMesg)dbo.collection("customers").insertOne(JSON.parse(listOnMesg.toString()));
 
     var obj = {
       message : JSON.stringify(listOnMesg),
     };
-    console.log('e qui dentro? ' + JSON.stringify(listOnMesg));
     listOnMesg = new Array();
-    console.log('/f obj -> ' + JSON.stringify(obj));
 
-  if(obj.message !== ""){
-    console.log('sono dentro ' + obj.message);
-     dbo.collection("customers").insertOne(obj);
-  }
+
 
  var result = dbo.collection("customers").find({}).toArray(function(err,result){
-   console.log('sto per mandare la risposta');
    var messages = new Array();
    result.forEach(function(element){
         messages.push(element.message);
    });
 
-   messages.forEach(function(ele){
-      console.log('messages '+ ele);
-   });
-
    res.render('index',{message:messages});
-   console.log('mandato');
  });
 
-
-   /*var messages = result.forEach(function(element){
-       console.log('element: '+element);
-   });
-
-   console.log('populated messages: '+ messages);*/
-
- console.log("--->"+result);
- //console.log('tutti i dati : '+result);
- //console.log("all db : " + JSON.stringify(result.toString()));
 });
 
 app.get("/m",(req,res)=>{
-  res.render('index',{message:listOnMesg.toString()});
+  //,{message:listOnMesg.toString()}
+  res.render('index');
 });
 
 app.post("/message",function(req,res){
-  console.log("/message called succesfully :" + req.body.message);
-  console.log("/message called succesfully :" + req.body.name);
-
   var personWithMessage = { name: req.body.name , message: req.body.message };
-  console.log('from client ' + JSON.stringify(personWithMessage));
-
   listOnMesg.push(personWithMessage);
   amqp.connect(amqpUrl,function(err,conn){
     conn.createChannel(function(err,ch){
@@ -100,16 +74,27 @@ app.post("/message",function(req,res){
       ch.sendToQueue(queueName,Buffer.from(req.body.message));
     });
   });
-  res.send(listOnMesg);
+/* recently added this is the ajax call*/
+if(personWithMessage !== "" || personWithMessage !== null){
+   dbo.collection("customers").insertOne(personWithMessage);
+}
+
+var messages = new Array();
+
+dbo.collection("customers").find({}).toArray(function(err,result){
+      result.forEach(function(element){
+        var response = {name:element.name, message:element.message};
+          messages.push(response);
+  });
+  res.send(messages);
+});
+
 });
 
 amqp.connect(amqpUrl,function(err,conn){
   conn.createChannel(function(err,ch){
     ch.assertQueue(queueName,{durable: false});
-    console.log(" <- Waiting for messages in %s. To Exit press CTRL+C",queueName);
     ch.consume(queueName,function(msg){
-      //listOnMesg.push(msg.content.toString());
-      console.log('-> list ->'+listOnMesg); //this is never shown
       console.log(" <- Received %s", msg.content.toString()); //I can see this in the logs
     },{noAck:true});
   });
