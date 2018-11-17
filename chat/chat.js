@@ -29,7 +29,6 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 //app.use(express.static(path.join(__dirname, 'static')));
 app.listen(1989);
-app.set('view engine', 'pug');
 
 var listOnMesg = new Array();
 
@@ -37,27 +36,6 @@ app.get("/",(req,res)=>{
   //res.render(__dirname+'/static/index.html',{message:listOnMesg.toString()});
   //,{message:listOnMesg.toString()}
   res.render('index');
-});
-
-app.get("/f",(req,res)=>{
-  //if(listOnMesg)dbo.collection("customers").insertOne(JSON.parse(listOnMesg.toString()));
-
-    var obj = {
-      message : JSON.stringify(listOnMesg),
-    };
-    listOnMesg = new Array();
-
-
-
- var result = dbo.collection("customers").find({}).toArray(function(err,result){
-   var messages = new Array();
-   result.forEach(function(element){
-        messages.push(element.message);
-   });
-
-   res.render('index',{message:messages});
- });
-
 });
 
 app.get("/m",(req,res)=>{
@@ -89,6 +67,18 @@ dbo.collection("customers").find({}).toArray(function(err,result){
   res.send(messages);
 });
 
+});
+
+app.post("/load",function(req,res){
+  var messages = new Array();
+
+  dbo.collection("customers").find({}).toArray(function(err,result){
+        result.forEach(function(element){
+          var response = {name:element.name, message:element.message};
+            messages.push(response);
+    });
+    res.send(messages);
+  });
 });
 
 amqp.connect(amqpUrl,function(err,conn){
