@@ -33,8 +33,20 @@ script(type='text/javascript').
     },
     success: function(asd){
     console.log('on success');
-    console.log(asd);
-    $("#here").html(JSON.stringify(asd));
+    //console.log(asd);
+    for(var x in asd){
+      console.log(asd[x].name);
+      console.log(asd[x].message);
+      var name = asd[x].name;
+      var message = asd[x].message;
+      $('#here').append(asd[x].name);
+      $('#here').append(asd[x].message);
+    }
+
+
+
+
+    //$("#here").html(JSON.stringify(asd));
     //$("#here").load(location.href + " #here");
     }
     })

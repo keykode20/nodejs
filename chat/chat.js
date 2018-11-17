@@ -62,7 +62,7 @@ app.get("/f",(req,res)=>{
 
 app.get("/m",(req,res)=>{
   //,{message:listOnMesg.toString()}
-  res.render('index');
+  res.sendFile(path.join(__dirname+'/views/index.html'));
 });
 
 app.post("/message",function(req,res){
