@@ -75,9 +75,9 @@ dbo.collection("customers").find({}).toArray(function(err,result){
           messages.push(response);
   });
   res.send(messages);
-});
-pusher.trigger('my-channel', 'my-event', {
-  "message": "hello world"
+  pusher.trigger('my-channel', 'my-event', {
+    "message": personWithMessage
+  });
 });
 });
 
@@ -100,10 +100,4 @@ amqp.connect(amqpUrl,function(err,conn){
       console.log(" <- Received %s", msg.content.toString()); //I can see this in the logs
     },{noAck:true});
   });
-});
-
-
-
-pusher.trigger('my-channel', 'my-event', {
-  "message": "hello world"
 });

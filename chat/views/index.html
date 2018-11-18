@@ -126,8 +126,9 @@ function loading(){
 
   var channel = pusher.subscribe('my-channel');
   channel.bind('my-event', function(data) {
-    Push.create("Hello from Sabe.io!", {
-        body: "This is a web notification!",
+    console.log(data);
+    Push.create("Hai un nuovo messaggio!", {
+        body: JSON.stringify(data.message.message),
         icon: "/icon.png",
         timeout: 5000,
         onClick: function() {
