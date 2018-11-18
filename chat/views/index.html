@@ -27,6 +27,7 @@
             </ul>
         </div>
     </div>
+
 </section>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
@@ -79,4 +80,52 @@ function loading(){
   })
 }
 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.5/push.js"></script>
+<script>
+  (function(){
+    var requestButton = document.querySelector(".request-btn");
+        var showButton = document.querySelector(".show-btn");
+
+        function onGranted() {
+            requestButton.style.background = "green";
+        }
+
+        function onDenied() {
+            requestButton.style.background = "red";
+        }
+
+        requestButton.onclick = function() {
+            Push.Permission.request(onGranted, onDenied);
+        }
+
+        showButton.onclick = function() {
+            Push.create("Hello from Sabe.io!", {
+                body: "This is a web notification!",
+                icon: "/icon.png",
+                timeout: 5000,
+                onClick: function() {
+                    console.log(this);
+                }
+            });
+        };
+
+  })();
+</script>
+<script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+<script>
+  //var channel = pusher.subscribe('my-channel');
+
+  // Enable pusher logging - don't include this in production
+  Pusher.logToConsole = true;
+
+  var pusher = new Pusher('faf88ac27bbf9a6165c3', {
+    cluster: 'eu',
+    forceTLS: true
+  });
+
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('my-event', function(data) {
+    alert(JSON.stringify(data));
+  });
 </script>

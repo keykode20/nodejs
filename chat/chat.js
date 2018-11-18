@@ -9,6 +9,16 @@ const amqpUrl = "amqp://jfldddlv:ebyYr8y-HlyRi4wQOJjnyIvEahODNhGj@mosquito.rmq.c
 const queueName = "chat";
 const mongo = require('mongodb');
 
+var Pusher = require('pusher');
+
+var pusher = new Pusher({
+  appId: '651155',
+  key: 'faf88ac27bbf9a6165c3',
+  secret: '6a8edce08441e89d9d2a',
+  cluster: 'eu',
+  encrypted: true
+});
+
 var MongoClient = require('mongodb').MongoClient;
 var url = "mongodb://localhost:27017/mydb";
 var dbo;
@@ -66,7 +76,9 @@ dbo.collection("customers").find({}).toArray(function(err,result){
   });
   res.send(messages);
 });
-
+pusher.trigger('my-channel', 'my-event', {
+  "message": "hello world"
+});
 });
 
 app.post("/load",function(req,res){
@@ -88,4 +100,10 @@ amqp.connect(amqpUrl,function(err,conn){
       console.log(" <- Received %s", msg.content.toString()); //I can see this in the logs
     },{noAck:true});
   });
+});
+
+
+
+pusher.trigger('my-channel', 'my-event', {
+  "message": "hello world"
 });
