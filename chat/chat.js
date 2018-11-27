@@ -8,6 +8,7 @@ const upload = multer(); // for parsing multipart/form-data
 const amqpUrl = "amqp://jfldddlv:ebyYr8y-HlyRi4wQOJjnyIvEahODNhGj@mosquito.rmq.cloudamqp.com/jfldddlv";
 const queueName = "chat";
 const mongo = require('mongodb');
+const SSE = require("sse-node");
 
 var Pusher = require('pusher');
 
@@ -75,11 +76,18 @@ dbo.collection("customers").find({}).toArray(function(err,result){
           messages.push(response);
   });
   res.send(messages);
-  pusher.trigger('my-channel', 'my-event', {
+  /*pusher.trigger('my-channel', 'my-event', {
     "message": personWithMessage
-  });
+  });*/
 });
 });
+
+app.get("/sse", (req, res) => {
+    const client = SSE(req, res, {ping:100000});
+    client.send("Hello world!",);
+    client.onClose(() => console.log("Bye client!"));
+});
+
 
 app.post("/load",function(req,res){
   var messages = new Array();
@@ -92,6 +100,8 @@ app.post("/load",function(req,res){
     res.send(messages);
   });
 });
+
+
 
 amqp.connect(amqpUrl,function(err,conn){
   conn.createChannel(function(err,ch){

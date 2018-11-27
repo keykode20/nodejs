@@ -76,46 +76,24 @@ function loading(){
               var placeholder = placeholder + '<li>'+name+": "+message+"</li>";
           }
           $('.placeHere').html(placeholder);
+          var es = new EventSource("/sse");
+          es.onmessage = function(ev) {
+              alert('cheo');
+              //alert(ev.data);
+          };
       }
-  })
+  });
+
+
+
 }
 
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.5/push.js"></script>
-<script>
-  (function(){
-    var requestButton = document.querySelector(".request-btn");
-        var showButton = document.querySelector(".show-btn");
-
-        function onGranted() {
-            requestButton.style.background = "green";
-        }
-
-        function onDenied() {
-            requestButton.style.background = "red";
-        }
-
-        requestButton.onclick = function() {
-            Push.Permission.request(onGranted, onDenied);
-        }
-
-        showButton.onclick = function() {
-            Push.create("Hello from Sabe.io!", {
-                body: "This is a web notification!",
-                icon: "/icon.png",
-                timeout: 5000,
-                onClick: function() {
-                    console.log(this);
-                }
-            });
-        };
-
-  })();
-</script>
 <script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/event-source-polyfill/0.0.9/eventsource.min.js"></script>
+<!--
 <script>
-  //var channel = pusher.subscribe('my-channel');
-
   // Enable pusher logging - don't include this in production
   Pusher.logToConsole = true;
 
@@ -135,5 +113,7 @@ function loading(){
             console.log(this);
         }
     });
+    loading();
   });
 </script>
+-->
