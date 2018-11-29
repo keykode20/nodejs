@@ -1,87 +1,33 @@
-$(function() {
-
-  $("#sendMessageButton").on('click',function(){
+$('#sendMessageButton').on('click',function(){
+  var loc;
+  loc = navigator.geolocation.getCurrentPosition(function(position){
+      loc = {latitude:position.coords.latitude, longitude:position.coords.longitude };
+      console.log('function trigger');
+      console.log(loc);
+      var name = $('#name').val();
+      var email = $('#email').val();
+      var phone = $('#phone').val();
+      var message = $('#message').val();
       $.ajax({
-          url:'/test',
-          type: "POST",
-          data: {
-            message: $('#message').val(),
-          },
-          success: function(){
-          }
-        })
-  });
-
-/*  $("#contactForm input,#contactForm textarea").jqBootstrapValidation({
-    preventSubmit: true,
-    submitError: function($form, event, errors) {
-      // additional error messages or events
-    },
-    submitSuccess: function($form, event) {
-      event.preventDefault(); // prevent default submit behaviour
-      // get values from FORM
-      var name = $("input#name").val();
-      var email = $("input#email").val();
-      var phone = $("input#phone").val();
-      var message = $("textarea#message").val();
-      var firstName = name; // For Success/Failure Message
-      // Check for white space in name for Success/Fail message
-      if (firstName.indexOf(' ') >= 0) {
-        firstName = name.split(' ').slice(0, -1).join(' ');
-      }
-      $this = $("#sendMessageButton");
-      $this.prop("disabled", true); // Disable submit button until AJAX call is complete to prevent duplicate messages
-      $.ajax({
-        url: "/test",
         type: "POST",
+        url: "/sendMessage",
         data: {
-          name: name,
-          phone: phone,
-          email: email,
-          message: message
+          name : name,
+          email : email,
+          phone : phone,
+          message : message,
+          position : loc
         },
-        cache: false,
-        success: function() {
-          // Success message
-          $('#success').html("<div class='alert alert-success'>");
-          $('#success > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-            .append("</button>");
-          $('#success > .alert-success')
-            .append("<strong>Your message has been sent. </strong>");
-          $('#success > .alert-success')
-            .append('</div>');
-          //clear all fields
-          $('#contactForm').trigger("reset");
-        },
-        error: function() {
-          // Fail message
-          $('#success').html("<div class='alert alert-danger'>");
-          $('#success > .alert-danger').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
-            .append("</button>");
-          $('#success > .alert-danger').append($("<strong>").text("Sorry " + firstName + ", it seems that my mail server is not responding. Please try again later!"));
-          $('#success > .alert-danger').append('</div>');
-          //clear all fields
-          $('#contactForm').trigger("reset");
-        },
-        complete: function() {
-          setTimeout(function() {
-            $this.prop("disabled", false); // Re-enable submit button when AJAX call is complete
-          }, 1000);
+        success: function(response){
+
+          /*new google.maps.Map(document.getElementById('geolocalizationResponse'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 8
+          });*/
+          //$('#geolocalizationResponse').html('test');
+          $('#hiddenModal').trigger('click');
         }
       });
-    },
-    filter: function() {
-      return $(this).is(":visible");
-    },
-  }); */
-
-  $("a[data-toggle=\"tab\"]").click(function(e) {
-    e.preventDefault();
-    $(this).tab("show");
   });
-});
 
-/*When clicking on Full hide fail/success boxes */
-$('#name').focus(function() {
-  $('#success').html('');
 });
