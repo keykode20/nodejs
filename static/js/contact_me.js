@@ -1,9 +1,5 @@
 $('#sendMessageButton').on('click',function(){
-  var loc;
-  loc = navigator.geolocation.getCurrentPosition(function(position){
-      loc = {latitude:position.coords.latitude, longitude:position.coords.longitude };
       console.log('function trigger');
-      console.log(loc);
       var name = $('#name').val();
       var email = $('#email').val();
       var phone = $('#phone').val();
@@ -15,8 +11,8 @@ $('#sendMessageButton').on('click',function(){
           name : name,
           email : email,
           phone : phone,
-          message : message,
-          position : loc
+          message : message
+//          position : loc
         },
         success: function(response){
 
@@ -29,5 +25,3 @@ $('#sendMessageButton').on('click',function(){
         }
       });
   });
-
-});
